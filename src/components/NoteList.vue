@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { IconCirclePlus, IconX } from '@tabler/icons-vue'
+
 // Define la prop 'notes' como un array de objetos tipo Note
 const props = defineProps<{
   notes: Array<{
@@ -20,10 +22,10 @@ const emit = defineEmits<{
     <div class="flex w-full items-center justify-between">
       <h2 class="pl-2 text-2xl font-semibold">Notes</h2>
       <button
-        class="px-4 py-2 bg-[var(--color-beige)] border border-[var(--color-sage)] rounded block hover:bg-[var(--color-sage)]"
+        class="flex px-4 py-2 bg-[var(--color-beige)] border border-[var(--color-sage)] rounded block hover:bg-[var(--color-sage)]"
         @click="emit('create')"
       >
-        Add Note
+        <IconCirclePlus class="w-6 h-6 mr-1" /> New
       </button>
     </div>
     <ul
@@ -47,7 +49,7 @@ const emit = defineEmits<{
             @click.stop="emit('delete', note.id)"
             title="Delete"
           >
-            ×
+            <IconX class="w-4 h-4" />
           </button>
         </div>
       </li>
