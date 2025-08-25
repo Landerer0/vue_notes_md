@@ -11,11 +11,11 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="p-4 rounded" style="background-color: var(--color-buff)">
-    <div v-if="props.note" class="w-full break-words">
+  <div class="flex-1 p-4" style="background-color: var(--color-buff)">
+    <div v-if="props.note" class="w-full">
       <h3 class="text-center font-bold">{{ props.note.title }}</h3>
       <!-- Markdown renderizado -->
-      <div class="prose prose-sm max-w-none" v-html="marked(props.note.content)"></div>
+      <div class="prose max-w-full text-justify break-words" v-html="marked(props.note.content)"></div>
     </div>
     <div v-else>
       <p>Selecciona una nota para ver la vista previa</p>

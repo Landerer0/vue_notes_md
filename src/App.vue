@@ -78,20 +78,21 @@ function handleDelete(noteId: string) {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg-[var(--color-beige)]">
-    <!-- ← Elemento raíz único -->
-    <h1 class="text-3xl font-bold text-center pt-4">Markdown Notes</h1>
-    <div class="flex-1 grid grid-cols-12 gap-4 p-4">
-      <NoteList
-        :notes="notes"
-        @select="handleSelect"
-        @create="handleCreate"
-        @delete="handleDelete"
-        class="col-span-3"
-      />
-      <div class="col-span-9 grid grid-rows-2 gap-2">
-        <NoteEditor :note="activeNote" />
-        <NotePreview :note="activeNote" />
+  <div class="h-dvh flex flex-col overflow-hidden bg-[var(--color-beige)]">
+    <h1 class="shrink-0 text-3xl font-bold text-center pt-4">Markdown Notes</h1>
+    <div class="flex-1 min-h-0 overflow-hidden">
+      <div class="flex h-full w-full gap-4 p-4">
+        <NoteList
+          :notes="notes"
+          @select="handleSelect"
+          @create="handleCreate"
+          @delete="handleDelete"
+          class="w-1/4 shrink-0 h-full overflow-auto"
+        />
+        <div class="flex-1 min-w-0 h-full overflow-hidden flex flex-col gap-4">
+          <NoteEditor :note="activeNote" class="shrink-0" />
+          <NotePreview :note="activeNote" class="flex-1 min-h-0 overflow-auto rounded-lg" />
+        </div>
       </div>
     </div>
   </div>
