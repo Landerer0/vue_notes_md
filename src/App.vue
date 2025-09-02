@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import NoteEditor from './components/NoteEditor.vue'
 import NotePreview from './components/NotePreview.vue'
+import NotesApi from '../services/notesApi'
 
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import NoteList from './components/NoteList.vue'
 
 class Note {
@@ -15,6 +16,27 @@ class Note {
     this.title = title
     this.content = content
   }
+}
+
+// QUEDA INCORPORAR CONEXIÓN DE LAS NOTAS CON EL BACKEND: Formato y la entrega de datos desde frontend a backend
+onMounted(async () => {
+  notes.value = await NotesApi.getAll()
+})
+
+async function addNote(newNote: Note) {
+  const note = await NotesApi.create(newNote)
+  notes.value.push(note)
+}
+
+async function deleteNote(id: string) {
+  await NotesApi.remove(id)
+  notes.value = notes.value.filter((n) => n.id !== id)
+}
+
+async function updateNote(id: string, updatedNote: Note) {
+  const note = await NotesApi.update(id, updatedNote)
+  const index = notes.value.findIndex((n) => n.id === id)
+  notes.value[index] = note
 }
 
 // Cargar notas y contador de id desde localStorage
