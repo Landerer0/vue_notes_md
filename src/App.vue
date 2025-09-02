@@ -1,97 +1,40 @@
 <script setup lang="ts">
 import NoteEditor from './components/NoteEditor.vue'
 import NotePreview from './components/NotePreview.vue'
-import NotesApi from '../services/notesApi'
+import { NotesApi } from './services/notesApi'
 
 import { computed, ref, watch, onMounted } from 'vue'
+import {Note} from '@/models/Note'
 import NoteList from './components/NoteList.vue'
-
-class Note {
-  id: string
-  title: string
-  content: string // Markdown
-
-  constructor(id: string, title: string, content: string) {
-    this.id = id
-    this.title = title
-    this.content = content
-  }
-}
 
 // QUEDA INCORPORAR CONEXIÓN DE LAS NOTAS CON EL BACKEND: Formato y la entrega de datos desde frontend a backend
 onMounted(async () => {
   notes.value = await NotesApi.getAll()
 })
 
-async function addNote(newNote: Note) {
-  const note = await NotesApi.create(newNote)
-  notes.value.push(note)
-}
-
-async function deleteNote(id: string) {
-  await NotesApi.remove(id)
-  notes.value = notes.value.filter((n) => n.id !== id)
-}
-
-async function updateNote(id: string, updatedNote: Note) {
-  const note = await NotesApi.update(id, updatedNote)
-  const index = notes.value.findIndex((n) => n.id === id)
+async function updateNote(updatedNote: Note) {
+  const note = await NotesApi.update(updatedNote)
+  const index = notes.value.findIndex((n) => n.id === note.id)
   notes.value[index] = note
 }
 
-// Cargar notas y contador de id desde localStorage
-function loadNotes(): Note[] {
-  const raw = localStorage.getItem('notes')
-  if (!raw)
-    return [
-      new Note('1', 'Primera nota', '# Hola mundo'),
-      new Note('2', 'Segunda nota', 'Texto **markdown** de ejemplo'),
-    ]
-  try {
-    const arr = JSON.parse(raw)
-    return arr.map((n: any) => new Note(n.id, n.title, n.content))
-  } catch {
-    return []
-  }
-}
-
-function loadNoteIdCounter(): number {
-  const raw = localStorage.getItem('noteIdCounter')
-  const initialNumberOfNotes = 2
-  if (raw) return parseInt(raw, 10)
-  else return initialNumberOfNotes
-}
-
-const notes = ref<Note[]>(loadNotes())
-const noteIdCounter = ref<number>(loadNoteIdCounter())
+const notes = ref<Note[]>([])
 const activeNoteId = ref<string | null>(null)
 const activeNote = computed(() => notes.value.find((n) => n.id === activeNoteId.value) || null)
 
-watch(
-  notes,
-  (val) => {
-    localStorage.setItem('notes', JSON.stringify(val))
-  },
-  { deep: true },
-)
-
-watch(noteIdCounter, (val) => {
-  localStorage.setItem('noteIdCounter', val.toString())
-})
-
-function handleSelect(noteId: string) {
+async function handleSelect(noteId: string) {
   activeNoteId.value = noteId
   console.log('Nota seleccionada:', noteId)
 }
 
-function handleCreate() {
-  noteIdCounter.value += 1
-  const newId = noteIdCounter.value.toString()
-  notes.value.push(new Note(newId, 'Nueva nota ' + newId, ''))
-  activeNoteId.value = newId
+async function handleCreate() {
+  const newNote = await NotesApi.create('newTitle','')
+  notes.value.push(newNote)
+  activeNoteId.value = newNote.id
 }
 
-function handleDelete(noteId: string) {
+async function handleDelete(noteId: string) {
+  await NotesApi.delete(noteId)
   notes.value = notes.value.filter((n) => n.id !== noteId)
   if (activeNoteId.value === noteId) {
     activeNoteId.value = null
