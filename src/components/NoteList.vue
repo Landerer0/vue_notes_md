@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { IconCirclePlus, IconX } from '@tabler/icons-vue'
-import { Note } from '@/models/Note';
+import { Note } from '@/models/Note'
+import { ref } from 'vue'
+import PdfViewer from './PdfViewer.vue'
+
+const showPdfModal = ref(false)
+
 
 // Define la prop 'notes' como un array de objetos tipo Note
 
 const props = defineProps<{
   notes: Note[]
 }>()
-
 
 const emit = defineEmits<{
   (e: 'select', note: Note): void
@@ -26,6 +30,11 @@ const emit = defineEmits<{
       >
         <IconCirclePlus class="w-6 h-6 mr-1" /> New
       </button>
+      <div>
+        <button @click="showPdfModal = true">Titles PDF</button>
+
+        <PdfViewer v-if="showPdfModal" @close="showPdfModal = false" />
+      </div>
     </div>
     <ul
       class="flex-1 overflow-y-auto bg-[var(--color-beige)] rounded border-[var(--color-sage)] border gap-2 list-disc pl-6"

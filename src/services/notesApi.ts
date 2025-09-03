@@ -29,4 +29,20 @@ export const NotesApi = {
   async delete(id: string): Promise<void> {
     await axios.delete(`${BASE_URL}/${id}`)
   },
+
+  async getTitlesPdf(filename?: string): Promise<ArrayBuffer> {
+    const response = await axios.get(`${BASE_URL}/pdf`, {
+      params: { filename },
+      responseType: 'arraybuffer', // necesario para manejar archivos binarios
+    })
+    return response.data
+  },
+
+  async downloadTitlesPdf(filename: string): Promise<Blob> {
+    const response = await axios.get(`${BASE_URL}/pdf`, {
+      params: { filename },
+      responseType: 'blob', // importante para descarga
+    })
+    return response.data
+  },
 }

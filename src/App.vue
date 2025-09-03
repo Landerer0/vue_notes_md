@@ -3,7 +3,7 @@ import NoteEditor from '@/components/NoteEditor.vue'
 import NotePreview from '@/components/NotePreview.vue'
 import { NotesApi } from '@/services/notesApi'
 
-import { computed, ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { Note } from '@/models/Note'
 import NoteList from '@/components/NoteList.vue'
 import { debounce } from '@/composables/Debounce'
