@@ -1,64 +1,68 @@
 <script setup lang="ts">
-import NoteEditor from './components/NoteEditor.vue'
-import NotePreview from './components/NotePreview.vue'
-import { NotesApi } from './services/notesApi'
+import NoteEditor from '@/components/NoteEditor.vue'
+import NotePreview from '@/components/NotePreview.vue'
+import { NotesApi } from '@/services/notesApi'
 
 import { computed, ref, watch, onMounted } from 'vue'
 import { Note } from '@/models/Note'
-import NoteList from './components/NoteList.vue'
+import NoteList from '@/components/NoteList.vue'
 import { debounce } from '@/composables/Debounce'
 
 const props = defineProps<{ note: Note | null }>()
-const debounceTimeInMs = 1000
+const debounceTimeInMiliseconds = 1000
 const notes = ref<Note[]>([])
-const activeNoteId = ref<string | null>(null)
-const activeNote = computed(() => notes.value.find((n) => n.id === activeNoteId.value) || null)
+const activeNote = ref<Note | null>(null)
 
 onMounted(async () => {
   notes.value = await NotesApi.getAll()
 })
 
 const debouncedSave = debounce(async (note: Note) => {
-  if (note.id) {
-    await updateNote(note)
+  const noteToSave = new Note(note.id, note.title, note.content, note.createdAt, note.updatedAt)
+
+  if (noteToSave.id) {
+    await updateNote(noteToSave)
     console.log(
       'Nota guardada automáticamente con debounce de ',
-      debounceTimeInMs,
-      'ms, id: ' + note.id,
+      debounceTimeInMiliseconds,
+      'ms, id: ' + noteToSave.id,
     )
   }
-}, debounceTimeInMs)
+}, debounceTimeInMiliseconds)
 
 watch(
-  () => props.note,
+  activeNote,
   (newNote) => {
-    if (newNote) debouncedSave(newNote)
+    if (newNote) {
+      debouncedSave(newNote)
+      console.log('Se detectó un cambio en la nota activa:', newNote.id)
+    }
   },
   { deep: true },
 )
 
-async function updateNote(updatedNote: Note) {
-  const note = await NotesApi.update(updatedNote)
-  const index = notes.value.findIndex((n) => n.id === note.id)
-  notes.value[index] = note
+async function updateNote(noteToUpdate: Note) {
+  const updatedNote = await NotesApi.update(noteToUpdate)
+  const index = notes.value.findIndex((n) => n.id === updatedNote.id)
+  notes.value[index] = updatedNote
 }
 
-async function handleSelect(noteId: string) {
-  activeNoteId.value = noteId
-  console.log('Nota seleccionada:', noteId)
+async function handleSelect(selectedNote: Note) {
+  activeNote.value = selectedNote
+  console.log('Nota seleccionada:', activeNote.value.id)
 }
 
 async function handleCreate() {
   const newNote = await NotesApi.create('newTitle', '')
   notes.value.push(newNote)
-  activeNoteId.value = newNote.id
+  activeNote.value = newNote
 }
 
-async function handleDelete(noteId: string) {
-  await NotesApi.delete(noteId)
-  notes.value = notes.value.filter((n) => n.id !== noteId)
-  if (activeNoteId.value === noteId) {
-    activeNoteId.value = null
+async function handleDelete(noteToDelete: Note) {
+  await NotesApi.delete(noteToDelete.id)
+  notes.value = notes.value.filter((n) => n.id !== noteToDelete.id)
+  if (activeNote.value && activeNote.value.id === noteToDelete.id) {
+    activeNote.value = null
   }
 }
 </script>

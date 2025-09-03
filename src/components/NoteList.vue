@@ -1,21 +1,18 @@
 <script setup lang="ts">
 import { IconCirclePlus, IconX } from '@tabler/icons-vue'
+import { Note } from '@/models/Note';
 
 // Define la prop 'notes' como un array de objetos tipo Note
+
 const props = defineProps<{
-  notes: Array<{
-    id: string
-    title: string
-    content: string
-    createdAt: Date
-    updatedAt: Date
-  }>
+  notes: Note[]
 }>()
 
+
 const emit = defineEmits<{
-  (e: 'select', noteId: string): void
+  (e: 'select', note: Note): void
   (e: 'create'): void
-  (e: 'delete', noteId: string): void
+  (e: 'delete', note: Note): void
 }>()
 </script>
 
@@ -37,18 +34,18 @@ const emit = defineEmits<{
         class="mb-2 note-content rounded cursor-pointer group"
         v-for="note in props.notes"
         :key="note.id"
-        @click="emit('select', note.id)"
+        @click="emit('select', note)"
       >
         <div class="flex items-center justify-between">
           <p
             class="font-semibold cursor-pointer break-words group-hover:underline"
-            @click="emit('select', note.id)"
+            @click="emit('select', note)"
           >
             {{ note.title }}
           </p>
           <button
             class="px-2 py-1 rounded text-red-600 font-bold group-hover:no-underline decoration-transparent"
-            @click.stop="emit('delete', note.id)"
+            @click.stop="emit('delete', note)"
             title="Delete"
           >
             <IconX class="w-4 h-4" />

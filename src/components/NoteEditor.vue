@@ -1,12 +1,8 @@
 <script setup lang="ts">
+import { Note } from '@/models/Note';
+
 const props = defineProps<{
-  note: {
-    id: string
-    title: string
-    content: string
-    createdAt: Date
-    updatedAt: Date
-  } | null
+  note: Note | null
 }>()
 </script>
 
