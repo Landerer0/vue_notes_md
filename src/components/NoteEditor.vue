@@ -4,6 +4,8 @@ const props = defineProps<{
     id: string
     title: string
     content: string
+    createdAt: Date
+    updatedAt: Date
   } | null
 }>()
 </script>
@@ -15,7 +17,10 @@ const props = defineProps<{
     <div v-if="props.note" class="flex flex-col h-full">
       <div class="flex items-center gap-2">
         <h3>Title:</h3>
-        <input v-model="props.note.title" class="border rounded px-2 py-1 flex-1 bg-[var(--input-bg)]" />
+        <input
+          v-model="props.note.title"
+          class="border rounded px-2 py-1 flex-1 bg-[var(--input-bg)]"
+        />
       </div>
       <textarea
         class="border rounded p-2 flex-1 resize-none my-2 text-justify w-full break-words bg-[var(--input-bg)]"

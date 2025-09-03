@@ -18,6 +18,7 @@ export const NotesApi = {
   },
 
   async update(note: Note): Promise<Note> {
+    console.log('Updating note:', note) // Debug log
     const response = await axios.put(`${BASE_URL}/${note.id}`, {
       title: note.title,
       content: note.content,

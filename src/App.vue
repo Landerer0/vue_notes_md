@@ -4,13 +4,38 @@ import NotePreview from './components/NotePreview.vue'
 import { NotesApi } from './services/notesApi'
 
 import { computed, ref, watch, onMounted } from 'vue'
-import {Note} from '@/models/Note'
+import { Note } from '@/models/Note'
 import NoteList from './components/NoteList.vue'
+import { debounce } from '@/composables/Debounce'
 
-// QUEDA INCORPORAR CONEXIÓN DE LAS NOTAS CON EL BACKEND: Formato y la entrega de datos desde frontend a backend
+const props = defineProps<{ note: Note | null }>()
+const debounceTimeInMs = 1000
+const notes = ref<Note[]>([])
+const activeNoteId = ref<string | null>(null)
+const activeNote = computed(() => notes.value.find((n) => n.id === activeNoteId.value) || null)
+
 onMounted(async () => {
   notes.value = await NotesApi.getAll()
 })
+
+const debouncedSave = debounce(async (note: Note) => {
+  if (note.id) {
+    await updateNote(note)
+    console.log(
+      'Nota guardada automáticamente con debounce de ',
+      debounceTimeInMs,
+      'ms, id: ' + note.id,
+    )
+  }
+}, debounceTimeInMs)
+
+watch(
+  () => props.note,
+  (newNote) => {
+    if (newNote) debouncedSave(newNote)
+  },
+  { deep: true },
+)
 
 async function updateNote(updatedNote: Note) {
   const note = await NotesApi.update(updatedNote)
@@ -18,17 +43,13 @@ async function updateNote(updatedNote: Note) {
   notes.value[index] = note
 }
 
-const notes = ref<Note[]>([])
-const activeNoteId = ref<string | null>(null)
-const activeNote = computed(() => notes.value.find((n) => n.id === activeNoteId.value) || null)
-
 async function handleSelect(noteId: string) {
   activeNoteId.value = noteId
   console.log('Nota seleccionada:', noteId)
 }
 
 async function handleCreate() {
-  const newNote = await NotesApi.create('newTitle','')
+  const newNote = await NotesApi.create('newTitle', '')
   notes.value.push(newNote)
   activeNoteId.value = newNote.id
 }

@@ -6,6 +6,8 @@ const props = defineProps<{
     id: string
     title: string
     content: string
+    createdAt: Date
+    updatedAt: Date
   } | null
 }>()
 </script>
@@ -15,7 +17,10 @@ const props = defineProps<{
     <div v-if="props.note" class="w-full">
       <h3 class="text-center font-bold">{{ props.note.title }}</h3>
       <!-- Markdown renderizado -->
-      <div class="prose max-w-full text-justify break-words" v-html="marked(props.note.content)"></div>
+      <div
+        class="prose max-w-full text-justify break-words"
+        v-html="marked(props.note.content)"
+      ></div>
     </div>
     <div v-else>
       <p>Selecciona una nota para ver la vista previa</p>
