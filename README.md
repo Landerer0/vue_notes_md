@@ -1,7 +1,7 @@
 # 📝 Vue Markdown Notes App (Frontend)
 
 
-Este proyecto corresponde al *frontend* de la aplicación de toma de notas en formato Markdown, basada en el roadmap https://roadmap.sh/projects/markdown-note-taking-app. Está desarrollado con https://vuejs.org/, https://www.typescriptlang.org/ y https://vitejs.dev/, y se conecta al backend implementado con *Express.js*.
+Este proyecto corresponde al **frontend** de la aplicación de toma de notas en formato Markdown, basada en el roadmap https://roadmap.sh/projects/markdown-note-taking-app. Está desarrollado con https://vuejs.org/, https://www.typescriptlang.org/ y https://vitejs.dev/, y se conecta al backend implementado con *Express.js*.
 
 La aplicación permite crear, editar, visualizar y eliminar notas en formato Markdown, consumiendo una API REST documentada con Swagger.
 
@@ -23,7 +23,7 @@ Este frontend se conecta al backend disponible en el repositorio https://github.
 
 ## 🛠️ Instalación y uso
 
-**Nota**
+
 1. Clonar el repositorio:
 ```bash
 git clone https://github.com/Landerer0/vue_notes_md.git
@@ -36,4 +36,5 @@ npm install
 3. Iniciar servidor:
 ```bash
 npm run dev
-```
+``` 
+**Nota**: Para que el servidor funcione correctamente, es necesario que el servidor [backend](https://github.com/tu-usuario/express_notes_md) se encuentre iniciado.
