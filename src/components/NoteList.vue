@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { IconCirclePlus, IconX } from '@tabler/icons-vue'
+import { IconCirclePlus, IconX, IconFileTypePdf } from '@tabler/icons-vue'
 import { Note } from '@/models/Note'
 import { ref } from 'vue'
 import PdfViewer from './PdfViewer.vue'
 
 const showPdfModal = ref(false)
-
 
 // Define la prop 'notes' como un array de objetos tipo Note
 
@@ -24,14 +23,19 @@ const emit = defineEmits<{
   <div class="rounded bg-[var(--color-vanilla)] p-4 flex flex-col gap-2">
     <div class="flex w-full items-center justify-between">
       <h2 class="pl-2 text-2xl font-semibold">Notes</h2>
-      <button
-        class="flex px-4 py-2 bg-[var(--color-beige)] border border-[var(--color-sage)] rounded block hover:bg-[var(--color-sage)]"
-        @click="emit('create')"
-      >
-        <IconCirclePlus class="w-6 h-6 mr-1" /> New
-      </button>
-      <div>
-        <button @click="showPdfModal = true">Titles PDF</button>
+      <div class="flex flex-row gap-2">
+        <button
+          class="flex px-4 py-2 bg-[var(--color-beige)] border border-[var(--color-sage)] rounded block hover:bg-[var(--color-sage)]"
+          @click="emit('create')"
+        >
+          <IconCirclePlus class="w-6 h-6 mr-1" /> New
+        </button>
+        <button
+          class="flex px-4 py-2 bg-[var(--color-beige)] border border-[var(--color-sage)] rounded block hover:bg-[var(--color-sage)]"
+          @click="showPdfModal = true"
+        >
+          <IconFileTypePdf class="w-6 h-6 mr-1" /> Titles
+        </button>
 
         <PdfViewer v-if="showPdfModal" @close="showPdfModal = false" />
       </div>

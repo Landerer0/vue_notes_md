@@ -1,14 +1,24 @@
 <template>
-  <div class="modal">
-    <iframe :src="pdfUrl" width="100%" height="100%"></iframe>
-    <button @click="downloadPDF">Download PDF</button>
-    <button @click="$emit('close')">Close Modal</button>
+  <div
+    class="fixed modal bg-[var(--color-vanilla)] top-[10%] left-[10%] w-[80%] h-[80%] border rounded border-[var(--color-sage)]"
+  >
+    <div class="flex flex-row gap-2 p-2 justify-between">
+      <button
+        class="flex px-4 py-2 bg-[var(--color-beige)] border border-[var(--color-sage)] rounded block hover:bg-[var(--color-sage)]"
+        @click="downloadPDF"
+      >
+        <IconDownload /> Download
+      </button>
+      <button @click="$emit('close')"><IconX /></button>
+    </div>
+    <iframe :src="pdfUrl" class="px-2" width="100%" height="90%"></iframe>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { NotesApi } from '@/services/notesApi'
+import { IconDownload, IconX } from '@tabler/icons-vue'
 
 const pdfUrl = ref('')
 
@@ -28,15 +38,4 @@ async function downloadPDF() {
 </script>
 
 <style scoped>
-.modal {
-  position: fixed;
-  top: 10%;
-  left: 10%;
-  width: 80%;
-  height: 80%;
-  background: white;
-  border: 1px solid #ccc;
-  padding: 1rem;
-  overflow: hidden;
-}
 </style>
