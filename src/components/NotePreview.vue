@@ -10,7 +10,7 @@ const props = defineProps<{
 <template>
   <div class="flex-1 p-4" style="background-color: var(--color-buff)">
     <div v-if="props.note" class="w-full">
-      <h3 class="text-center font-bold">{{ props.note.title }}</h3>
+      <h3 class="text-center font-bold text-4xl">{{ props.note.title }}</h3>
       <!-- Markdown renderizado -->
       <div
         class="prose max-w-full text-justify break-words"
