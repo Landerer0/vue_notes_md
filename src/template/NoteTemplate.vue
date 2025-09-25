@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import NoteTemplate from './template/noteTemplate.vue';
+import { ref } from 'vue'
 </script>
 
 <template>
-  <NoteTemplate />
+  <router-view />
 </template>
 
 <style scoped></style>
